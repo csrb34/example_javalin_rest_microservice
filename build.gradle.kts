@@ -1,3 +1,8 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+java.sourceCompatibility = JavaVersion.VERSION_11
+java.targetCompatibility = JavaVersion.VERSION_11
+
 plugins {
     kotlin("jvm") version "1.9.22"
     application
@@ -25,6 +30,12 @@ tasks.test {
 
 kotlin {
     jvmToolchain(8)
+}
+
+tasks.withType<KotlinCompile>().all {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
 }
 
 application {
