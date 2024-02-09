@@ -13,17 +13,17 @@ class UserDao {
         3 to User(name = "Dave", email = "dave@dave.kt", id = 3)
     )
 
-    var lastId: AtomicInteger = AtomicInteger(users.size - 1)
+    private var lastId: AtomicInteger = AtomicInteger(users.size - 1)
 
     fun save(name: String, email: String) {
         val id = lastId.incrementAndGet()
         users[id] = User(name = name, email = email, id = id)
     }
 
-    fun save(name: String, email: String, sendUserBack: Boolean): User? {
+    fun save(name: String, email: String, _sendUserBack: Boolean): User {
         val id = lastId.incrementAndGet()
         users[id] = User(name = name, email = email, id = id)
-        return users[id]
+        return users[id]!!
     }
 
     fun findById(id: Int): User? {
@@ -43,8 +43,8 @@ class UserDao {
         return users[id]
     }
 
-    fun delete(id: Int) {
-        users.remove(id)
+    fun delete(id: Int): User? {
+        return users.remove(id)
     }
 
 }

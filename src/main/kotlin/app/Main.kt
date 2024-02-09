@@ -40,7 +40,7 @@ fun main() {
 //                val user = ctx.body()
 //                println(user)
                 val user = ctx.bodyAsClass<User>()
-                val newUser = userDao.save(name = user.name, email = user.email)
+                userDao.save(name = user.name, email = user.email)
                 ctx.status(201)
             }
 
@@ -48,13 +48,13 @@ fun main() {
                 val user = ctx.bodyAsClass<User>()
                 val newUser = userDao.save(name = user.name, email = user.email, true)
                 ctx.status(201)
-                ctx.json(newUser ?: throw NotFoundResponse())
+                ctx.json(newUser)
             }
 
             patch("/users/{user-id}") { ctx ->
                 val userId = ctx.pathParamAsClass<Int>("user-id").get()
                 val user = ctx.bodyAsClass<User>()
-                val updatedUser = userDao.update(id = userId, user = user)
+                userDao.update(id = userId, user = user)
 //              204 response code does not carry a payload body.
 //              200 response could contain a payload body
                 ctx.status(204)
@@ -78,7 +78,8 @@ fun main() {
             }
         }
     }.apply {
-        exception(Exception::class.java) { e, ctx -> e.printStackTrace() }
+        exception(ClassCastException::class.java) { _, ctx -> ctx.json("invalid body") }
+        exception(Exception::class.java) { e, _ -> e.printStackTrace() }
         error(HttpStatus.NOT_FOUND) { ctx -> ctx.json("not found") }
     }.start(7070)
 }
